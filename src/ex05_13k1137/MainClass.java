@@ -34,6 +34,7 @@ public class MainClass extends JFrame implements ActionListener,
 	private JMenuItem jmi_zoom;
 	private JMenuItem jmi_color;
 	private JMenuItem jmi_help;
+	private JMenuItem jmi_capture;
 
 	ChoosePanel cp;
 	PaintSpace ps;
@@ -57,30 +58,26 @@ public class MainClass extends JFrame implements ActionListener,
 		menu_help = new JMenu("ヘルプ");
 
 		jmi_exit = new JMenuItem("終了");
-		jmi_exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				InputEvent.CTRL_MASK));
 		jmi_exit.addActionListener(this);
 		menu_file.add(jmi_exit);
 
 		jmi_new = new JMenuItem("画面のクリア");
 		jmi_new.addActionListener(this);
 		menu_file.add(jmi_new);
+		
+		jmi_capture = new JMenuItem("保存");
+		jmi_capture.addActionListener(this);
+		menu_file.add(jmi_capture);
 
 		jmi_zoom = new JMenuItem("拡大・縮小");
-		jmi_zoom.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				InputEvent.CTRL_MASK));
 		jmi_zoom.addActionListener(this);
 		menu_edit.add(jmi_zoom);
 
 		jmi_color = new JMenuItem("色");
-		jmi_color.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
-				InputEvent.CTRL_MASK));
 		jmi_color.addActionListener(this);
 		menu_edit.add(jmi_color);
 
 		jmi_help = new JMenuItem("助けてもらう");
-		jmi_help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H,
-				InputEvent.CTRL_MASK));
 		jmi_help.addActionListener(this);
 		menu_help.add(jmi_help);
 
