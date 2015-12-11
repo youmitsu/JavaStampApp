@@ -3,13 +3,21 @@ package ex05_13k1137;
 //import java.awt.FlowLayout;
 //import java.awt.GridLayout;
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.FileDialog;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -20,6 +28,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
 public class MainClass extends JFrame implements ActionListener,
@@ -35,7 +44,7 @@ public class MainClass extends JFrame implements ActionListener,
 	private JMenuItem jmi_color;
 	private JMenuItem jmi_help;
 	private JMenuItem jmi_capture;
-
+	
 	ChoosePanel cp;
 	PaintSpace ps;
 	JScrollPane jsp;
@@ -64,8 +73,8 @@ public class MainClass extends JFrame implements ActionListener,
 		jmi_new = new JMenuItem("画面のクリア");
 		jmi_new.addActionListener(this);
 		menu_file.add(jmi_new);
-		
-		jmi_capture = new JMenuItem("保存");
+
+		jmi_capture = new JMenuItem("名前を付けて保存");
 		jmi_capture.addActionListener(this);
 		menu_file.add(jmi_capture);
 
@@ -115,6 +124,24 @@ public class MainClass extends JFrame implements ActionListener,
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(jmi_exit)) {
 			System.exit(0);
+		}
+		if (e.getSource().equals(jmi_capture)) {
+			try {
+				
+				int w = ps.getWidth();
+				int h = ps.getHeight();
+				BufferedImage image = new BufferedImage(w, h,
+						BufferedImage.TYPE_INT_RGB);
+				Graphics g2 = image.createGraphics();
+				ps.paint(g2);
+				g2.dispose();
+
+				FileOutputStream fo = new FileOutputStream(this.writeFile());
+				ImageIO.write(image, "jpeg", fo);
+				fo.close();
+			} catch (IOException err) {
+				err.getMessage();
+			}
 		}
 		if (e.getSource().equals(jmi_new)) {
 			ps.curObj = null;
@@ -200,6 +227,15 @@ public class MainClass extends JFrame implements ActionListener,
 	@Override
 	public void stateChanged(ChangeEvent e) {
 
+	}
+	
+	String writeFile(){
+		FileDialog fd = new FileDialog(new JFrame() ,"保存", FileDialog.SAVE);
+		fd.setFile("test.jpg");
+		fd.setVisible(true);
+		String fullpath = fd.getDirectory() + fd.getFile();
+		fd.dispose();
+		return fullpath;
 	}
 
 }
