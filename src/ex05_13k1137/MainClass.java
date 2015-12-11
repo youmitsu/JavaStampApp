@@ -4,6 +4,7 @@ package ex05_13k1137;
 //import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.FileDialog;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -16,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.imageio.ImageIO;
 import javax.swing.event.ChangeEvent;
@@ -44,6 +47,8 @@ public class MainClass extends JFrame implements ActionListener,
 	private JMenuItem jmi_color;
 	private JMenuItem jmi_help;
 	private JMenuItem jmi_capture;
+	private JMenuItem jmi_undo;
+	private JMenuItem jmi_redo;
 	
 	ChoosePanel cp;
 	PaintSpace ps;
@@ -54,7 +59,7 @@ public class MainClass extends JFrame implements ActionListener,
 
 	public MainClass() {
 		setSize(1370, 780);
-		setTitle("図形を描けるよ");
+		setTitle("Stamp!!!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		zw = new ZoomWindow();
@@ -66,6 +71,8 @@ public class MainClass extends JFrame implements ActionListener,
 		menu_edit = new JMenu("編集");
 		menu_help = new JMenu("ヘルプ");
 
+//---------------メニューバー「ファイル」の要素-------------------------//
+	
 		jmi_exit = new JMenuItem("終了");
 		jmi_exit.addActionListener(this);
 		menu_file.add(jmi_exit);
@@ -77,6 +84,20 @@ public class MainClass extends JFrame implements ActionListener,
 		jmi_capture = new JMenuItem("名前を付けて保存");
 		jmi_capture.addActionListener(this);
 		menu_file.add(jmi_capture);
+		
+		jmi_undo = new JMenuItem("元に戻す");
+		jmi_undo.addActionListener(this);
+		jmi_undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+				InputEvent.CTRL_MASK));
+		menu_file.add(jmi_undo);
+		
+		jmi_redo = new JMenuItem("やり直す");
+		jmi_redo.addActionListener(this);
+		jmi_redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
+				InputEvent.CTRL_MASK));
+		menu_file.add(jmi_redo);
+		
+//----------------メニューバー「編集」の要素---------------------------//		
 
 		jmi_zoom = new JMenuItem("拡大・縮小");
 		jmi_zoom.addActionListener(this);
@@ -85,11 +106,12 @@ public class MainClass extends JFrame implements ActionListener,
 		jmi_color = new JMenuItem("色");
 		jmi_color.addActionListener(this);
 		menu_edit.add(jmi_color);
-
-		jmi_help = new JMenuItem("助けてもらう");
+		
+//----------------メニューバー「ヘルプ」の要素----------------------------//
+		jmi_help = new JMenuItem("ヘルプ");
 		jmi_help.addActionListener(this);
-		menu_help.add(jmi_help);
-
+		menu_help.add(jmi_help);		
+//----------------------------------------------------------------//
 		jmb.add(menu_file);
 		jmb.add(menu_edit);
 		jmb.add(menu_help);
@@ -125,6 +147,12 @@ public class MainClass extends JFrame implements ActionListener,
 		if (e.getSource().equals(jmi_exit)) {
 			System.exit(0);
 		}
+		if(e.getSource().equals(jmi_redo)){
+			ps.redo();
+		}
+		if(e.getSource().equals(jmi_undo)){
+			ps.undo();
+		}
 		if (e.getSource().equals(jmi_capture)) {
 			try {
 				
@@ -155,7 +183,16 @@ public class MainClass extends JFrame implements ActionListener,
 			cw.setVisible(true);
 		}
 		if (e.getSource().equals(jmi_help)) {
-			JOptionPane.showMessageDialog(null, "助けてもらえると思ったら大間違いだ！");
+			Desktop desktop = Desktop.getDesktop();
+			String uriString = "http://docs.oracle.com/javase/jp/6/api/";
+			try{
+				URI uri = new URI(uriString);
+				desktop.browse(uri);
+			}catch(URISyntaxException err){
+				err.printStackTrace();
+			}catch(IOException err){
+				err.printStackTrace();
+			}
 		}
 		if (e.getSource().equals(cp.button[0])) {
 			ps.curObj = new BigCircle();

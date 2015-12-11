@@ -11,13 +11,36 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 public class PaintSpace extends JPanel implements MouseListener {
+
+	// public static boolean isRedo;
+	Drawable preObj;
 	Drawable curObj;
 	ArrayList<ShapeObject> shapes = new ArrayList<ShapeObject>();
+	ArrayList<ShapeObject> redoShapes = new ArrayList<ShapeObject>();
 
 	PaintSpace() {
 		super();
 		setBackground(Color.white);
 		addMouseListener(this);
+		// isRedo = false;
+	}
+
+	public void undo() {
+		if (shapes.isEmpty()) {
+		} else {
+			redoShapes.add(shapes.get(shapes.size() - 1));
+			shapes.remove(shapes.size() - 1);
+			repaint();
+		}
+	}
+
+	public void redo() {
+		if (redoShapes.isEmpty()) {
+		} else {
+			shapes.add(redoShapes.get(redoShapes.size() - 1));
+			redoShapes.remove(redoShapes.size() - 1);
+			repaint();
+		}
 	}
 
 	@Override
@@ -43,6 +66,9 @@ public class PaintSpace extends JPanel implements MouseListener {
 			repaint();
 		}
 		curObj = null;
+		if (redoShapes != null) {
+			redoShapes.clear();
+		}
 	}
 
 	@Override
